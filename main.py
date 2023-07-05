@@ -11,6 +11,7 @@ import torch.nn as nn
 import matplotlib
 import matplotlib.pyplot as plt
 import torch.optim as optim
+import torch.nn.functional as F
 matplotlib.use('TkAgg')
 
 
@@ -71,18 +72,24 @@ def show_image():
 
 
 class BinNet(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
+    def __init__(self):
         super(BinNet, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, num_classes)
+
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.fc1 = nn.Linear(128 * 4 * 4, 256)
+        self.fc2 = nn.Linear(256, 10)
 
     def forward(self, x):
-        out = self.fc1(x)
-        out = self.relu(out)
-        out = self.fc2(out)
-        return out
-
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = self.pool(F.relu(self.conv3(x)))
+        x = x.view(-1, 128 * 4 * 4)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
 
 
 def show_loss(train_losses):
@@ -104,7 +111,7 @@ def train(num_epochs):
     for epoch in range(num_epochs):
         model.train()
         for images, labels in train_loader:
-            images = images.reshape(-1, 32*32*3).float().to(device)
+            images = images.float().to(device)
             labels = labels.to(device)
 
             # forward
@@ -127,7 +134,7 @@ def train(num_epochs):
             correct = 0
             total = 0
             for images, labels in test_loader:
-                images = images.reshape(-1, 32 * 32 * 3).float().to(device)
+                images = images.to(device)
                 labels = labels.to(device)
 
                 outputs = model(images)
@@ -160,10 +167,7 @@ if __name__ := "__main__":
     # show_image()
 
     # define model
-    input_size = 3072
-    hidden_size = 128
-    num_classes = 10
-    model = BinNet(input_size, hidden_size, num_classes)
+    model = BinNet()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
@@ -172,6 +176,6 @@ if __name__ := "__main__":
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    num_epochs = 10
+    num_epochs = 20
     train(num_epochs)
 
