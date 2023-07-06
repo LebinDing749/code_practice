@@ -11,8 +11,9 @@ import torch.nn as nn
 import matplotlib
 import matplotlib.pyplot as plt
 import torch.optim as optim
-import torch.nn.functional as F
-matplotlib.use('TkAgg')
+import gradio as gr
+matplotlib.use('Agg')
+
 
 
 class Cifar10Dataset(Dataset):
@@ -59,16 +60,37 @@ class Cifar10Dataset(Dataset):
 
         return data, labels
 
+def show_label_name():
+    meta_file = dataset_path + "/batches.meta"
+    with open(meta_file, 'rb') as f:
+        data = pickle.load(f, encoding='bytes')
 
-def show_image():
-    image_index = 0
+    class_names = [name.decode('utf-8') for name in data[b'label_names']]
+    return class_names
+
+
+def show_image(image_index):
+    image_index = int(image_index)
     image, label = train_dataset[image_index]
+    label_name = class_names[label]
+
+    input_tensor = image.clone().detach().to(device)
+    input_tensor = input_tensor.unsqueeze(0)
+
+    # 将模型设置为评估模式
+    model.eval()
+
+    # 不需要计算梯度，因为我们只是进行推断
+    with torch.no_grad():
+        # 前向传播，得到预测结果
+        output = model(input_tensor)
+
+    _, predicted = torch.max(output.data, 1)
+    predicted_name = class_names[predicted]
+
     image = image.numpy().transpose((1, 2, 0))
 
-    plt.imshow(image)
-    plt.title(f"Label:{label}")
-    plt.axis('off')
-    plt.show(block=True)
+    return image, label, label_name, int(predicted), predicted_name
 
 
 class BinNet(nn.Module):
@@ -76,34 +98,79 @@ class BinNet(nn.Module):
         super(BinNet, self).__init__()
 
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.bn2 = nn.BatchNorm2d(64)
         self.conv3 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.conv4 = nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1)
+        self.bn4 = nn.BatchNorm2d(256)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.fc1 = nn.Linear(128 * 4 * 4, 256)
-        self.fc2 = nn.Linear(256, 10)
+        self.fc1 = nn.Linear(256 * 2 * 2, 512)
+        self.fc2 = nn.Linear(512, 10)
 
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = self.pool(F.relu(self.conv3(x)))
-        x = x.view(-1, 128 * 4 * 4)
-        x = F.relu(self.fc1(x))
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = nn.ReLU()(x)
+        x = self.pool(x)
+
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = nn.ReLU()(x)
+        x = self.pool(x)
+
+        x = self.conv3(x)
+        x = self.bn3(x)
+        x = nn.ReLU()(x)
+        x = self.pool(x)
+
+        x = self.conv4(x)
+        x = self.bn4(x)
+        x = nn.ReLU()(x)
+        x = self.pool(x)
+
+        x = x.view(-1, 256*2*2)
+        x = self.fc1(x)
+        x = nn.ReLU()(x)
         x = self.fc2(x)
         return x
 
 
-def show_loss(train_losses):
+def visualize(train_losses, train_acc):
+    plt.subplot(3, 1, 1)
     plt.plot(train_losses, label='Training Loss')
     plt.xlabel('Iteration')
     plt.ylabel('Loss')
-    plt.legend
-    plt.show()
+    plt.legend()
+
+    plt.subplot(3, 1, 3)
+    plt.plot(train_acc, label="Train Acc")
+    plt.xlabel('Epoch')
+    plt.ylabel('Acc')
+    plt.legend()
+
+    css = "footer {display: none !important;} .gradio-container {min-height: 0px !important;}"
+    with gr.Blocks(css=css) as loss_acc_interface:
+        gr.Plot(value=plt)
+
+    image_interface = gr.Interface(fn=show_image,
+                                   inputs="number",
+                                   outputs=[gr.components.Image(type="pil", label="Image"),
+                                            gr.components.Textbox(label="Label"),
+                                            gr.components.Textbox(label="Name"),
+                                            gr.components.Textbox(label="Predict_label"),
+                                            gr.components.Textbox(label="Predict_Name")])
+
+    combined_interface = gr.TabbedInterface([loss_acc_interface, image_interface], ["Show Loss and Acc", "Show Image and Result"])
+    combined_interface.launch()
 
 
 def train(num_epochs):
 
     # record loss change
     train_losses = []
+    train_acc = []
     # record average loss per epoch
     epoch_loss = 0.0
     total_batches = 0
@@ -143,12 +210,14 @@ def train(num_epochs):
                 correct += (predicted == labels).sum().item()
 
             accuracy = 100 * correct / total
+            train_acc.append(accuracy)
             avg_loss = epoch_loss / total_batches
 
             print(f"Epoch [{epoch + 1}/{num_epochs}], Test Accuracy: {accuracy:.2f}%, Average_Loss: {avg_loss:.4f}")
 
+
     # show loss change by batches
-    # show_loss(train_losses)
+    visualize(train_losses, train_acc)
 
 
 if __name__ := "__main__":
@@ -176,6 +245,9 @@ if __name__ := "__main__":
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+
+
+
+    class_names = show_label_name()
     num_epochs = 20
     train(num_epochs)
-
