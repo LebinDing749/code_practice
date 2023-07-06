@@ -162,8 +162,8 @@ images = images.float().to(device)     增加精度有2%的提升
 
 （直接上图，如图有两个选项卡，一个show loss and acc, 另一个输入index, 显示图片信息 和 预测）
 
-![image-20230706092736446](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230706092736446.png)
+![image-20230706092736446](https://github.com/LebinDing749/code_practice/blob/cifar10/images/image-20230706092736446.png)
 
-![image-20230706092937360](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230706092937360.png)
+![image-20230706092937360](https://github.com/LebinDing749/code_practice/blob/cifar10/images/image-20230706092937360.png)
 
-<img src="C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230706092954081.png" alt="image-20230706092954081" style="zoom: 67%;" />
+<img src="https://github.com/LebinDing749/code_practice/blob/cifar10/images/image-20230706092954081.png" alt="image-20230706092954081" style="zoom: 67%;" />
