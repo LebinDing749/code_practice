@@ -44,7 +44,7 @@ Epoch [10/10], Test Accuracy: 78.41%, Average_Loss: 0.8777
 
 loss 和 acc 曲线
 
-![image-20230708124050248](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230708124050248.png)
+![image-20230708124050248](https://github.com/LebinDing749/code_practice/blob/resnet-18/images/img.png)
 
 ### 保留残差连接
 
@@ -102,7 +102,7 @@ Epoch [10/10], Test Accuracy: 80.78%, Average_Loss: 0.4399
 
 loss 和 acc 曲线:
 
-![image-20230708132340274](C:\Users\lenovo\AppData\Roaming\Typora\typora-user-images\image-20230708132340274.png)
+![image-20230708132340274](https://github.com/LebinDing749/code_practice/blob/resnet-18/images/img_1.png)
 
 
 
