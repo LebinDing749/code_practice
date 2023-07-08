@@ -17,8 +17,7 @@ def show_image():
 # my network    
 class BinNet(nn.Module):
     
-# show loss change    
-def show_loss(train_losses):
+# show loss change    P
     
 # train model    
 def train(num_epochs):
@@ -46,7 +45,7 @@ if __name__ := "__main__":
 
 损失函数功能
 
-​	CrossEntropyLoss()
+​	例如，CrossEntropyLoss()，通过计算模型预测的概率分布与真实标签之间的交叉熵来度量预测结果的准确性，它输出一个概率分布，表示每个类别的概率，将这个概率分布与真实标签进行比较，并计算出交叉熵损失，衡量模型预测的不确定性与真实标签之间的差距。交叉熵损失越小，表示模型的预测结果越接近真实标签，模型的性能越好。
 
 网络结构图
 
@@ -56,7 +55,7 @@ if __name__ := "__main__":
 
 batch_size=64，epoch=20, 两层全连接 （acc 44%）,5层全连接（acc 48%），果断换网络结构
 
- 
+
 
 更换网络结构: （卷积 激活函数 池化）+ （卷积 激活函数 池化）+ 全连接
 
@@ -66,7 +65,7 @@ epoch 20
 | -------------------- | ---------------- | ----- | ----- | ----- | ---- |
 | learning rate        | 0.001            |       |       |       |      |
 | optimizer            | Adam             |       |       |       |      |
-| loss_func            | CrossEntropyLoss |       |       |       |      |
+| loss_function        | CrossEntropyLoss |       |       |       |      |
 | batch_size           | 64               | 128   | 256   | 32    |      |
 | epoches              | 20               |       |       |       |      |
 | acc                  | 68.88            | 67.83 | 67.34 | 68.39 |      |
@@ -75,7 +74,7 @@ epoch 20
 | ----------------------- | ---------------- | ----- | ----- | ------ | ---- |
 | learning rate           | 0.001            | 0.002 | 0.01  | 0.0005 |      |
 | optimizer               | Adam             |       |       |        |      |
-| loss_func               | CrossEntropyLoss |       |       |        |      |
+| loss_function           | CrossEntropyLoss |       |       |        |      |
 | batch_size              | 64               |       |       |        |      |
 | epoches                 | 20               |       |       |        |      |
 | acc                     | 68.88            | 68.89 | 57.12 | 67.89  |      |
@@ -84,7 +83,7 @@ epoch 20
 | ------------- | ---------------- | ----- | ----- | ------- | ---- |
 | learning rate | 0.001            |       |       |         |      |
 | optimizer     | Adam             | SGD   | AdamW | RMSprop |      |
-| loss_func     | CrossEntropyLoss |       |       |         |      |
+| loss_function | CrossEntropyLoss |       |       |         |      |
 | batch_size    | 64               |       |       |         |      |
 | epoches       | 20               |       |       |         |      |
 | acc           | 68.88            | 62.87 | 68.71 | 68.66   |      |
@@ -127,10 +126,6 @@ acc达到75.03%
 acc达到80.16%
 
 
-
-images = images.float.to(device)
-
-images = images.float().to(device)     增加精度有2%的提升
 
 #### c.结论部分
 

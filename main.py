@@ -197,23 +197,23 @@ def train(num_epochs):
             loss.backward()
             optimizer.step()
 
-        with torch.no_grad():
-            correct = 0
-            total = 0
-            for images, labels in test_loader:
-                images = images.to(device)
-                labels = labels.to(device)
+            with torch.no_grad():
+                correct = 0
+                total = 0
+                for images, labels in test_loader:
+                    images = images.to(device)
+                    labels = labels.to(device)
 
-                outputs = model(images)
-                _, predicted = torch.max(outputs.data, 1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
+                    outputs = model(images)
+                    _, predicted = torch.max(outputs.data, 1)
+                    total += labels.size(0)
+                    correct += (predicted == labels).sum().item()
 
-            accuracy = 100 * correct / total
-            train_acc.append(accuracy)
-            avg_loss = epoch_loss / total_batches
+                accuracy = 100 * correct / total
+                train_acc.append(accuracy)
+                avg_loss = epoch_loss / total_batches
 
-            print(f"Epoch [{epoch + 1}/{num_epochs}], Test Accuracy: {accuracy:.2f}%, Average_Loss: {avg_loss:.4f}")
+                print(f"Epoch [{epoch + 1}/{num_epochs}], Test Accuracy: {accuracy:.2f}%, Average_Loss: {avg_loss:.4f}")
 
 
     # show loss change by batches
