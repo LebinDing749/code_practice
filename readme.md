@@ -157,8 +157,8 @@ acc达到80.16%
 
 （直接上图，如图有两个选项卡，一个show loss and acc, 另一个输入index, 显示图片信息 和 预测）
 
-![image-20230706092736446](https://github.com/LebinDing749/code_practice/blob/cifar10/images/image-20230706092736446.png)
+![image-20230706092736446](./images/image-20230706092736446.png)
 
-![image-20230706092937360](https://github.com/LebinDing749/code_practice/blob/cifar10/images/image-20230706092937360.png)
+![image-20230706092937360](./images/image-20230706092937360.png)
 
-<img src="https://github.com/LebinDing749/code_practice/blob/cifar10/images/image-20230706092954081.png" alt="image-20230706092954081" style="zoom: 67%;" />
+<img src="./images/image-20230706092954081.png" alt="image-20230706092954081" style="zoom: 67%;" />
