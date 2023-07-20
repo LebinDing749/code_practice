@@ -1,8 +1,7 @@
+
 # CVAE on MINIST
 
-#### CVAE: Conditional Variational Auto Encoder)
-
-
+#### CVAE: Conditional Variational Auto Encoder
 
 CVAE包含编码器（Encoder）和解码器（Decoder）两个部分。
 
