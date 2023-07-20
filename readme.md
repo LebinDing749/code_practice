@@ -79,7 +79,7 @@ def loss_function(recon_x, x, mean, logvar):
 
 辨识度极高，十分稳定，对比度略差
 
-![](D:\pythonProject\CVAE_on_MINIST\img_gen\generated_images_mean.png)
+![](./img_gen/generated_images_mean.png)
 
 
 
@@ -95,7 +95,7 @@ def loss_function(recon_x, x, mean, logvar):
 
 对比度增强，但数字辨识度下降
 
-![./img_gen](D:\pythonProject\CVAE_on_MINIST\img_gen\generated_images_sum.png)
+![](./img_gen\generated_images_sum.png)
 
 
 
@@ -121,7 +121,7 @@ loss = reconstruction_loss.pow(0.8) + kl_divergence_loss
 
 辨识度较高，对比度较高，稳定性下降
 
-![](D:\pythonProject\CVAE_on_MINIST\img_gen\generated_images_sum_pow(0.8).png)
+![](./img_gen/generated_images_sum_pow(0.8).png)
 
 #### 测试2
 
@@ -133,7 +133,7 @@ loss采用mean的形式，改变交叉熵loss的权重
 
 对比度略微增加，稳定性和辨识度下降
 
-![](D:\pythonProject\CVAE_on_MINIST\img_gen\generated_images_mean_pow(6).png)
+![](./img_gen/generated_images_mean_pow(6).png)
 
 ## 学习总结
 
