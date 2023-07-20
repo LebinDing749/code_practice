@@ -95,7 +95,7 @@ def loss_function(recon_x, x, mean, logvar):
 
 对比度增强，但数字辨识度下降
 
-![](./img_gen\generated_images_sum.png)
+![](./img_gen/generated_images_sum.png)
 
 
 
